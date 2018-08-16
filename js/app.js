@@ -23,6 +23,8 @@ Enemy.prototype.update = function(dt) {
 Enemy.prototype.render = function(x, y) {
     this.x = x;
     this.y = y;
+    // console.log(this.sprite);
+
     ctx.drawImage(Resources.get(this.sprite), 400, 58);  
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
@@ -33,53 +35,96 @@ Enemy.prototype.render = function(x, y) {
 
 let allEnemies = [];
 
-for (i = 0; i < 5; i ++){
-    let dt = 3;
-    let x = 200;
-    let y = 200;
-    allEnemies.push(new Enemy(dt, x, y));
-}
+// for (i = 0; i < 5; i ++){
+//     let dt = 3;
+//     let x = 200;
+//     let y = 200;
+//     allEnemies.push(new Enemy(dt, x, y));
+// }
 console.log(allEnemies);
 
 function draw(){
     for(i = 0; i < allEnemies.length; i ++){
-        console.log(allEnemies[i]);
+        
         allEnemies[i].update();
         allEnemies[i].render();
     }
 
 }
 
-// draw();
 
 
-const playerBox = 32;
 
-var Player = function() {
+const playerxBox = 101;
+const playeryBox = 83;
+
+var Player = function(x, y) {
     this.sprite = "images/char-boy.png"
-}
-
+    this.x = x;
+    this.y = y;     
+};
 
 Player.prototype.update = function(dt) {
     this.dt = dt;
 };
 
 Player.prototype.render = function(x, y) {
-    this.x = x;
-    this.y = y;
-    ctx.drawImage(Resources.get(this.sprite), 200, 300);
+   
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-Player.prototype.handleInput = function (){
+
+let playerStatus = [];
+    
+playerStatus[0] = {
+    x : 2 * playerxBox ,
+    y : 4 * playeryBox - 25
+}
+ 
+Player.prototype.handleInput = function (d){
+    
+    this.d = d;
+    
+    // old player position
+    let playerX = playerStatus[0].x;
+    let playerY = playerStatus[0].y;
+
+
+    // player direction
+    if(this.d == "left") playerX -= playerxBox;
+    if(this.d == "up") playerY -= playeryBox;
+    if(this.d == "right") playerX += playerxBox;
+    if(this.d == "down") playerY += playeryBox;
+
+    playerStatus.pop();
+
+    let newStatus = {
+        x : playerX,
+        y : playerY
+    }
+
+    this.x = playerX;
+    this.y = playerY;
+
+
+    playerStatus.push(newStatus);
+     
 
 };
 
-let player = new Player();
+
+var player = new Player();
 
 
 
 
-// let game = setInterval(draw, 300);
+ 
+
+
+
+
+
+
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
