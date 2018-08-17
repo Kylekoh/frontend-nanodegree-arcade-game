@@ -1,11 +1,14 @@
 // Enemies our player must avoid
-var Enemy = function() {
+var Enemy = function(x, y, dx) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+    this.x = x;
+    this.y = y;
+    this.dx = dx;
 };
 
 // Update the enemy's position, required method for game
@@ -20,20 +23,32 @@ Enemy.prototype.update = function(dt) {
 
 
 // Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function(x, y) {
-    this.x = x;
-    this.y = y;
-    // console.log(this.sprite);
-
-    ctx.drawImage(Resources.get(this.sprite), 400, 58);  
+Enemy.prototype.render = function() {
+    this.x += this.dx;
+    
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
 
 let allEnemies = [];
+let yStartPosition = [60, 143, 226];
+
+function drawEnemy(){
+    for (i = 0; i < 3; i ++){
+        let x = 0;
+        let num = Math.floor(Math.random() * yStartPosition.length)
+        let dx = (Math.random() + 0.65) * 6;
+        allEnemies.push(new Enemy(x, yStartPosition[num], dx));
+    }
+}
+
+setInterval(drawEnemy, 1300);
+
+
+
+
+
+
 
 // for (i = 0; i < 5; i ++){
 //     let dt = 3;
@@ -41,16 +56,27 @@ let allEnemies = [];
 //     let y = 200;
 //     allEnemies.push(new Enemy(dt, x, y));
 // }
-console.log(allEnemies);
+// console.log(allEnemies);
 
-function draw(){
-    for(i = 0; i < allEnemies.length; i ++){
+// function draw(){
+//     for(i = 0; i < allEnemies.length; i ++){
         
-        allEnemies[i].update();
-        allEnemies[i].render();
-    }
+//         allEnemies[i].update();
+//         allEnemies[i].render();
+//     }
 
-}
+// }
+
+
+
+
+
+
+
+// Now write your own player class
+// This class requires an update(), render() and
+// a handleInput() method.
+
 
 
 
@@ -106,24 +132,16 @@ Player.prototype.handleInput = function (d){
     this.x = playerX;
     this.y = playerY;
 
-
+    // if(this.x < playerxBox || this.x > 7 * playerxBox || this.y < playeryBox || this.y > 6 * playeryBox){
+    //     alert("Be careful")
+    // }else{
+        
+    // }
     playerStatus.push(newStatus);
-     
-
 };
 
 
 var player = new Player();
-
-
-
-
- 
-
-
-
-
-
 
 
 // Now instantiate your objects.
