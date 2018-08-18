@@ -15,7 +15,6 @@ var Enemy = function(x, y, dx) {
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
     this.dt = dt;
-
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -25,51 +24,8 @@ Enemy.prototype.update = function(dt) {
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     this.x += this.dx;
-    
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-
-
-let allEnemies = [];
-let yStartPosition = [60, 143, 226];
-
-function drawEnemy(){
-    for (i = 0; i < 3; i ++){
-        let x = 0;
-        let num = Math.floor(Math.random() * yStartPosition.length)
-        let dx = (Math.random() + 0.65) * 6;
-        allEnemies.push(new Enemy(x, yStartPosition[num], dx));
-    }
-}
-
-setInterval(drawEnemy, 1300);
-
-
-
-
-
-
-
-// for (i = 0; i < 5; i ++){
-//     let dt = 3;
-//     let x = 200;
-//     let y = 200;
-//     allEnemies.push(new Enemy(dt, x, y));
-// }
-// console.log(allEnemies);
-
-// function draw(){
-//     for(i = 0; i < allEnemies.length; i ++){
-        
-//         allEnemies[i].update();
-//         allEnemies[i].render();
-//     }
-
-// }
-
-
-
-
 
 
 
@@ -78,16 +34,13 @@ setInterval(drawEnemy, 1300);
 // a handleInput() method.
 
 
-
-
-
 const playerxBox = 101;
 const playeryBox = 83;
 
 var Player = function(x, y) {
     this.sprite = "images/char-boy.png"
     this.x = x;
-    this.y = y;     
+    this.y = y;  
 };
 
 Player.prototype.update = function(dt) {
@@ -95,18 +48,9 @@ Player.prototype.update = function(dt) {
 };
 
 Player.prototype.render = function(x, y) {
-   
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-
-let playerStatus = [];
-    
-playerStatus[0] = {
-    x : 2 * playerxBox ,
-    y : 4 * playeryBox - 25
-}
- 
 Player.prototype.handleInput = function (d){
     
     this.d = d;
@@ -128,25 +72,63 @@ Player.prototype.handleInput = function (d){
         x : playerX,
         y : playerY
     }
-
     this.x = playerX;
     this.y = playerY;
+    
 
-    // if(this.x < playerxBox || this.x > 7 * playerxBox || this.y < playeryBox || this.y > 6 * playeryBox){
-    //     alert("Be careful")
-    // }else{
-        
-    // }
+    if(this.x < 0 || this.x > 4 * playerxBox || this.y > 5 * playeryBox){
+        return ;
+    }
+
     playerStatus.push(newStatus);
 };
-
-
-var player = new Player();
 
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+
+let allEnemies = [];
+let yStartPosition = [58, 141, 224];
+
+function drawEnemy(){   
+    for (i = 0; i < 1; i ++){
+        let x = -20;
+        let num = Math.floor(Math.random() * yStartPosition.length);
+        let dx = Math.floor((Math.random() + 0.65) * 4);
+        console.log(allEnemies)
+        allEnemies.push(new Enemy(x, yStartPosition[num], dx));
+
+        if (allEnemies.length > 5){
+            allEnemies.shift();
+        }          
+        for (j = 0; j < allEnemies.length; j++){
+            // console.log(allEnemies[j])
+            // console.log(player.x, player.y, allEnemies[j].x, allEnemies[j].y);
+            if(player.x == allEnemies[j].x && player.y == allEnemies[j].y){
+                alert('You Lose');
+            }
+        }
+    }
+
+    
+}
+
+setInterval(drawEnemy, 1500);
+
+
+
+let playerStatus = [];
+    
+playerStatus[0] = {
+    x : 2 * playerxBox ,
+    y : 4 * playeryBox - 25
+}
+ 
+var player = new Player(playerStatus[0].x, playerStatus[0].y);
+
+
+
 
 
 // This listens for key presses and sends the keys to your
@@ -159,6 +141,13 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
     player.handleInput(allowedKeys[e.keyCode]);
+    // for (i = 0; i < allEnemies.length; i++){
+    //     if(player.x == allEnemies[i].x && player.y == allEnemies[i].y){
+    //         alert('bobobobo');
+    //     }
+    //     console.log(player.x, player.y);
+    //     console.log(allEnemies[i].x, allEnemies[i].y);
+    // }
 });
 
 
