@@ -9,7 +9,6 @@ var Enemy = function(x, y, dx) {
     this.y = y;
     this.x = x;
     this.dx = dx;
-
 };
 
 // Update the enemy's position, required method for game
@@ -19,8 +18,8 @@ Enemy.prototype.update = function(dt) {
 	
     this.x = this.x + this.dx * this.dt;
     
-	if (this.x > 510) {
-        this.x = -50;
+	if (this.x > 505) {
+        this.x = -20;
         this.dx = 100 + Math.floor(Math.random() * 220);
     };	
     // You should multiply any movement by the dt parameter
@@ -28,8 +27,9 @@ Enemy.prototype.update = function(dt) {
     // all computers.
 
     if (this.x + 80 > player.x && this.x < player.x + 80 && this.y == player.y){
-    	alert("YOU LOSE")
-
+    	alert("YOU LOSE");
+    	player.x = 202;
+        player.y = 307;
     }
 };
 
@@ -51,7 +51,7 @@ const playeryBox = 83;
 var Player = function(x, y) {
     this.sprite = "images/char-boy.png"
     this.x = x;
-    this.y = y;  
+    this.y = y;
 };
 
 Player.prototype.update = function(dt) {
@@ -65,32 +65,19 @@ Player.prototype.render = function(x, y) {
 Player.prototype.handleInput = function (d){
     
     this.d = d;
-    
-    // old player position
-    let playerX = playerStatus[0].x;
-    let playerY = playerStatus[0].y;
-
 
     // player direction
-    if(this.d == "left" && this.x > 0) playerX -= playerxBox;
-    if(this.d == "up" && this.y > -25) playerY -= playeryBox;
-    if(this.d == "right" && this.x < 404) playerX += playerxBox;
-    if(this.d == "down" && this.y < 390) playerY += playeryBox;
+    if(this.d == "left" && this.x > 0) this.x -= 101;
+    if(this.d == "up" && this.y > -25) this.y -= 83;
+    if(this.d == "right" && this.x < 404) this.x += 101;
+    if(this.d == "down" && this.y < 390) this.y += 83;
     
-    playerStatus.pop();
 
-    let newStatus = {
-        x : playerX,
-        y : playerY
-    }
-    this.x = playerX;
-    this.y = playerY;
-
-    if(this.y < playeryBox - 80){
+    if(this.y < 30){
 	    	alert('CONGRATURATIONS!! YOU WON!!');
+	    	player.x = 202;
+        	player.y = 307;
     }
-
-    playerStatus.push(newStatus);
 };
 
 
@@ -99,15 +86,8 @@ Player.prototype.handleInput = function (d){
 // Place the player object in a variable called player
 
 
-
-let playerStatus = [];
-    
-playerStatus[0] = {
-    x : 2 * playerxBox ,
-    y : 4 * playeryBox - 25
-}
  
-var player = new Player(playerStatus[0].x, playerStatus[0].y);
+var player = new Player(202, 307);
 
 let allEnemies = [];
 let yStartPosition = [58, 141, 224];
