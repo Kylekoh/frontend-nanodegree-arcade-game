@@ -6,24 +6,35 @@ var Enemy = function(x, y, dx) {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.x = x;
     this.y = y;
+    this.x = x;
     this.dx = dx;
+
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
     this.dt = dt;
+	
+    this.x = this.x + this.dx * this.dt;
+    
+	if (this.x > 510) {
+        this.x = -50;
+        this.dx = 100 + Math.floor(Math.random() * 220);
+    };	
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+
+    if (this.x + 80 > player.x && this.x < player.x + 80 && this.y == player.y){
+    	alert("YOU LOSE")
+
+    }
 };
 
-
 // Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    this.x += this.dx;
+Enemy.prototype.render = function() { 
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
@@ -61,11 +72,11 @@ Player.prototype.handleInput = function (d){
 
 
     // player direction
-    if(this.d == "left") playerX -= playerxBox;
-    if(this.d == "up") playerY -= playeryBox;
-    if(this.d == "right") playerX += playerxBox;
-    if(this.d == "down") playerY += playeryBox;
-
+    if(this.d == "left" && this.x > 0) playerX -= playerxBox;
+    if(this.d == "up" && this.y > -25) playerY -= playeryBox;
+    if(this.d == "right" && this.x < 404) playerX += playerxBox;
+    if(this.d == "down" && this.y < 390) playerY += playeryBox;
+    
     playerStatus.pop();
 
     let newStatus = {
@@ -74,10 +85,9 @@ Player.prototype.handleInput = function (d){
     }
     this.x = playerX;
     this.y = playerY;
-    
 
-    if(this.x < 0 || this.x > 4 * playerxBox || this.y > 5 * playeryBox){
-        return ;
+    if(this.y < playeryBox - 80){
+	    	alert('CONGRATURATIONS!! YOU WON!!');
     }
 
     playerStatus.push(newStatus);
@@ -87,34 +97,6 @@ Player.prototype.handleInput = function (d){
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-
-let allEnemies = [];
-let yStartPosition = [58, 141, 224];
-
-function drawEnemy(){   
-    for (i = 0; i < 1; i ++){
-        let x = -20;
-        let num = Math.floor(Math.random() * yStartPosition.length);
-        let dx = Math.floor((Math.random() + 0.65) * 4);
-        console.log(allEnemies)
-        allEnemies.push(new Enemy(x, yStartPosition[num], dx));
-
-        if (allEnemies.length > 5){
-            allEnemies.shift();
-        }          
-        for (j = 0; j < allEnemies.length; j++){
-            // console.log(allEnemies[j])
-            // console.log(player.x, player.y, allEnemies[j].x, allEnemies[j].y);
-            if(player.x == allEnemies[j].x && player.y == allEnemies[j].y){
-                alert('You Lose');
-            }
-        }
-    }
-
-    
-}
-
-setInterval(drawEnemy, 1500);
 
 
 
@@ -127,7 +109,13 @@ playerStatus[0] = {
  
 var player = new Player(playerStatus[0].x, playerStatus[0].y);
 
+let allEnemies = [];
+let yStartPosition = [58, 141, 224];
 
+
+for (i = 0; i < yStartPosition.length; i ++){
+	allEnemies.push(new Enemy(0, yStartPosition[i], 200));
+}
 
 
 
@@ -141,13 +129,6 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
     player.handleInput(allowedKeys[e.keyCode]);
-    // for (i = 0; i < allEnemies.length; i++){
-    //     if(player.x == allEnemies[i].x && player.y == allEnemies[i].y){
-    //         alert('bobobobo');
-    //     }
-    //     console.log(player.x, player.y);
-    //     console.log(allEnemies[i].x, allEnemies[i].y);
-    // }
 });
 
 
